@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feed - LocalLens</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<%- include('partials/header') %>
+
+<div class="container my-4">
+  <h1 class="mb-3 text-center">Community Feed</h1>
+  <p class="text-center mb-4">Share issues, events, recommendations and general updates with your neighbours.</p>
+
+  <!-- Category Filter -->
+  <form method="get" action="/" class="mb-4">
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <div class="input-group">
+          <label class="input-group-text" for="categorySelect">Category</label>
+          <select class="form-select" id="categorySelect" name="category" onchange="this.form.submit()">
+            <option value="" <%= !selectedCategory ? 'selected' : '' %>>All</option>
+            <option value="issue" <%= selectedCategory === 'issue' ? 'selected' : '' %>>Issue</option>
+            <option value="event" <%= selectedCategory === 'event' ? 'selected' : '' %>>Event</option>
+            <option value="recommendation" <%= selectedCategory === 'recommendation' ? 'selected' : '' %>>Recommendation</option>
+            <option value="general" <%= selectedCategory === 'general' ? 'selected' : '' %>>General</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <% if (posts.length === 0) { %>
+    <div class="alert alert-warning text-center">No posts found for your area.</div>
+  <% } else { %>
+    <div class="row">
+      <% posts.forEach(post => { %>
+        <div class="col-md-6 col-lg-4">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <span class="badge bg-secondary text-uppercase mb-2"><%= post.category %></span>
+              <h5 class="card-title"><%= post.title %></h5>
+              <h6 class="card-subtitle mb-2 text-muted">By <%= post.email %> on <%= new Date(post.created_at).toLocaleString() %></h6>
+              <p class="card-text"><%= post.content %></p>
+              <span class="badge bg-success">Upvotes: <%= post.upvotes %></span>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>
+</body>
+</html>
