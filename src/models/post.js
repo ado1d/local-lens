@@ -10,22 +10,8 @@ const Post = {
     );
   },
 
-  /**
-   * Retrieve posts filtered by area, optional category and optional search term.
-   * Posts are ordered by most recent first.
-   * @param {number} areaId - Area ID to filter posts by.
-   * @param {string|null} category - Optional category filter.
-   * @param {string|null} searchTerm - Optional search term to match against title or content.
-   * @returns {Promise<Array>} List of matching posts.
-   */
   async getByArea(areaId, category = null, searchTerm = null, sort = 'newest') {
-    /**
-     * Retrieve posts filtered by area, optional category, optional search term, and optional sort order.
-     * @param {number} areaId - Area ID to filter posts by.
-     * @param {string|null} category - Optional category filter.
-     * @param {string|null} searchTerm - Optional search term to match against title or content.
-     * @param {string} sort - Sort order: 'top' (by upvotes desc), 'newest' (created_at desc), or 'last_active' (created_at desc as placeholder for latest activity).
-     */
+    
     let sql = `SELECT posts.*, users.email FROM posts JOIN users ON posts.user_id = users.id WHERE posts.area_id = ?`;
     const params = [areaId];
     if (category) {
@@ -60,11 +46,6 @@ const Post = {
     return rows;
   },
 
-  /**
-   * Retrieve a single post by its ID, joined with the author's email.
-   * @param {number} id - Post ID.
-   * @returns {Promise<Object|null>} The post record or null if not found.
-   */
   async getById(id) {
     const [rows] = await pool.query(
       `SELECT posts.*, users.email FROM posts JOIN users ON posts.user_id = users.id WHERE posts.id = ?`,

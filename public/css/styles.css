@@ -1,17 +1,4 @@
-/*
- * Custom stylesheet
- *
- * The original application used Bootstrap defaults and minimal styling. To
- * provide a more professional, modern look we introduce a fresh colour
- * palette, rounded surfaces and subtle shadows. A dark mode is still
- * supported via the `data-theme="dark"` attribute on the root element.
- */
 
-/* Import a clean, modern typeface and icon set.
-   Only a few weights are requested to minimise page weight. If Google
-   Fonts or the icon CDN cannot be reached the browser will gracefully
-   fall back to system fonts. The bootstrap‑icons import makes the
-   hand/thumb and utility icons available throughout the app. */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css");
 
@@ -99,11 +86,6 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Cards */
-/* Cards adopt the surface colour and inherit text colour so they work
-   correctly in both light and dark themes. Without specifying
-   colour here, Bootstrap defaults would render dark text on dark
-   backgrounds in dark mode. */
 .card {
   background-color: var(--surface-color);
   color: var(--text-color);
@@ -123,7 +105,7 @@ a:hover {
   padding: 1.5rem;
 }
 
-/* Forum-style list card emphasising the category */
+
 .forum-card {
   border-left: 5px solid var(--secondary-color);
 }
@@ -208,7 +190,6 @@ a:hover {
   border-color: rgba(241, 196, 15, 0.3);
 }
 
-/* Override Bootstrap contextual badge colours to match the custom palette */
 .badge.bg-success {
   background-color: var(--secondary-color) !important;
   color: #fff !important;
@@ -219,12 +200,6 @@ a:hover {
   color: #fff !important;
 }
 
-/*
- * Filter panel styles
- * The sidebar on the feed page uses a card-like panel to present filters. It
- * inherits the same surface and shadow styles as cards but with its own
- * spacing and list-group behaviour.
- */
 .filter-panel {
   background-color: var(--surface-color);
   border-radius: 12px;
@@ -266,11 +241,6 @@ a:hover {
   font-weight: 600;
 }
 
-/*
- * Post card styles
- * Posts in the feed are displayed in a horizontal card layout with a left
- * column showing the upvote count and a right column containing the content.
- */
 .post-card {
   display: flex;
   background-color: var(--surface-color);
@@ -282,7 +252,6 @@ a:hover {
 }
 
 .post-card:hover {
-  /* Subtle lift and scale effect on hover to provide micro-interaction feedback */
   transform: translateY(-4px) scale(1.02);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
 }
@@ -341,7 +310,6 @@ a:hover {
 }
 
 .post-card .title {
-  /* Slightly larger heading for a more expressive look */
   font-size: 1.3rem;
   font-weight: 600;
   margin-bottom: 0.25rem;
@@ -387,7 +355,6 @@ a:hover {
   text-decoration: none;
 }
 
-/* Theme toggle button */
 #theme-toggle {
   color: #fff;
   border-color: rgba(255, 255, 255, 0.5);
