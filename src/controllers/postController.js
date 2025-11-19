@@ -1,6 +1,7 @@
 const Post = require('../models/post');
 const Area = require('../models/area');
 const Vote = require('../models/vote');
+const Comment = require('../models/comment');
 
 
 // to show main feed by user area and optional category
@@ -65,10 +66,11 @@ exports.createPost = async (req, res) => {
   }
 };
 
-// display a single post's details
+// display a single post's details along with its comments
 exports.showPost = async (req, res) => {
   const userId = req.session.userId;
   if (!userId) {
+    // require login to view post and comment
     return res.redirect('/login');
   }
   const postId = req.params.id;
@@ -77,7 +79,58 @@ exports.showPost = async (req, res) => {
     if (!post) {
       return res.status(404).render('404');
     }
-    res.render('posts/show', { post });
+    const comments = await Comment.getByPost(postId);
+    res.render('posts/show', { post, comments, currentUserId: userId, errors: req.flash('error') });
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+};
+
+// handle posting a new comment on a post; uses logged-in user's email as the name
+exports.addComment = async (req, res) => {
+  const postId = req.params.id;
+  const { content } = req.body;
+  const userId = req.session.userId;
+  const userEmail = req.session.email;
+  // require login and email in session to comment
+  if (!userId || !userEmail) {
+    return res.redirect('/login');
+  }
+  const errors = [];
+  if (!content) {
+    errors.push('Comment content is required');
+  }
+  if (errors.length) {
+    req.flash('error', errors);
+    return res.redirect(`/posts/${postId}`);
+  }
+  try {
+    await Comment.create(postId, userEmail, content);
+    res.redirect(`/posts/${postId}`);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+};
+
+// handle deleting a post (only the post's author can delete)
+exports.deletePost = async (req, res) => {
+  const userId = req.session.userId;
+  const postId = req.params.id;
+  if (!userId) {
+    return res.redirect('/login');
+  }
+  try {
+    const post = await Post.getById(postId);
+    if (!post) {
+      return res.status(404).render('404');
+    }
+    if (post.user_id !== userId) {
+      return res.status(403).send('You are not authorized to delete this post.');
+    }
+    await Post.delete(postId);
+    res.redirect('/');
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
@@ -118,3 +171,4 @@ exports.downvote = async (req, res) => {
     res.sendStatus(500);
   }
 };
+
