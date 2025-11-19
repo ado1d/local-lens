@@ -1,6 +1,6 @@
 const Post = require('../models/post');
 const Area = require('../models/area');
-
+const Vote = require('../models/vote');
 
 
 // to show main feed by user area and optional category
@@ -12,21 +12,36 @@ exports.feed = async (req, res) => {
     return res.redirect('/login');
   }
   const category = req.query.category || null;
+  const search = req.query.search || null;
+  const sort = req.query.sort || 'top';
   try {
-    const posts = await Post.getByArea(areaId, category);
-    res.render('index', { posts, selectedCategory: category });  //it'll load index.ejs from //views//posts directory
+    // Fetch posts for the feed based on current filters
+    const posts = await Post.getByArea(areaId, category, search, sort);
+    // Also fetch all posts (ignoring category filter) to compute counts per category
+    const allPosts = await Post.getByArea(areaId, null, search, sort);
+    const counts = {
+      issue: allPosts.filter(p => p.category === 'issue').length,
+      event: allPosts.filter(p => p.category === 'event').length,
+      recommendation: allPosts.filter(p => p.category === 'recommendation').length,
+      general: allPosts.filter(p => p.category === 'general').length
+    };
+    res.render('index', {
+      posts,
+      selectedCategory: category,
+      searchTerm: search || '',
+      counts,
+      selectedSort: sort
+    });
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
   }
 };
 
-
 // to render new post form for posting
 exports.showNewPostForm = (req, res) => {
   res.render('posts/new', { errors: req.flash('error'), old: {} });
 };
-
 
 // post submission handle
 exports.createPost = async (req, res) => {
@@ -44,6 +59,60 @@ exports.createPost = async (req, res) => {
   try {
     await Post.create(userId, areaId, category, title, content);
     res.redirect('/');
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+};
+
+// display a single post's details
+exports.showPost = async (req, res) => {
+  const userId = req.session.userId;
+  if (!userId) {
+    return res.redirect('/login');
+  }
+  const postId = req.params.id;
+  try {
+    const post = await Post.getById(postId);
+    if (!post) {
+      return res.status(404).render('404');
+    }
+    res.render('posts/show', { post });
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+};
+
+// handle upvote
+exports.upvote = async (req, res) => {
+  const userId = req.session.userId;
+  if (!userId) {
+    return res.redirect('/login');
+  }
+  const postId = req.params.id;
+  try {
+    await Vote.vote(userId, postId, 1);
+    // redirect back to the referring page (feed or detail)
+    const redirectUrl = req.get('Referer') || '/';
+    res.redirect(redirectUrl);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+};
+
+// handle downvote
+exports.downvote = async (req, res) => {
+  const userId = req.session.userId;
+  if (!userId) {
+    return res.redirect('/login');
+  }
+  const postId = req.params.id;
+  try {
+    await Vote.vote(userId, postId, -1);
+    const redirectUrl = req.get('Referer') || '/';
+    res.redirect(redirectUrl);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);

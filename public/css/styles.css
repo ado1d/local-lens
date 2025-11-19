@@ -1,31 +1,64 @@
-/* light mode */
+/*
+ * Custom stylesheet
+ *
+ * The original application used Bootstrap defaults and minimal styling. To
+ * provide a more professional, modern look we introduce a fresh colour
+ * palette, rounded surfaces and subtle shadows. A dark mode is still
+ * supported via the `data-theme="dark"` attribute on the root element.
+ */
+
+/* Import a clean, modern typeface and icon set.
+   Only a few weights are requested to minimise page weight. If Google
+   Fonts or the icon CDN cannot be reached the browser will gracefully
+   fall back to system fonts. The bootstrap‑icons import makes the
+   hand/thumb and utility icons available throughout the app. */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css");
+
+/* Light mode variables */
 :root {
-  --background-color: #ffffff;
-  --text-color: #343a40;
-  --primary-color: #0d6efd;
-  --secondary-color: #6c757d;
-  --link-color: #0d6efd;
+  /* page background and content surfaces */
+  --background-color: #f8f9fa;
+  --surface-color: #ffffff;
+  /* text colours */
+  --text-color: #2a2f45;
+  /* primary palette (nav and accents) */
+  --primary-color: #2c3e50;
+  --secondary-color: #18bc9c;
+  --accent-color: #f39c12;
+  /* links default to the secondary colour */
+  --link-color: var(--secondary-color);
 }
 
-/* dark */
+/* Dark mode overrides. When data-theme="dark" is set on the <html> element
+   these variables will override the light mode defaults. */
 [data-theme="dark"] {
-  --background-color: #0e1a2b;
-  --text-color: #e0e0e0;
-  --primary-color: #0d6efd;
-  --secondary-color: #6c757d;
-  --link-color: #0d6efd;
+  --background-color: #0e1726;
+  --surface-color: #1a2533;
+  --text-color: #f1f5f9;
+  --primary-color: #2c3e50;
+  --secondary-color: #18bc9c;
+  --accent-color: #f39c12;
+  --link-color: var(--secondary-color);
 }
 
-
+/* Global styles */
 body {
   background-color: var(--background-color);
   color: var(--text-color);
-  font-family: 'Roboto', Arial, sans-serif;
+  font-family: "Poppins", Arial, sans-serif;
   margin: 0;
   padding: 0;
+  /* smooth colour transitions when toggling themes */
+  transition: background-color 0.3s, color 0.3s;
 }
 
-h1, h2, h3, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 600;
   color: var(--text-color);
 }
@@ -33,40 +66,338 @@ h1, h2, h3, h5, h6 {
 a {
   color: var(--link-color);
   text-decoration: none;
+  transition: color 0.2s;
 }
 
 a:hover {
   text-decoration: underline;
+  color: var(--accent-color);
 }
 
-nav.navbar {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+/* Navigation bar styling */
+.navbar {
+  background: linear-gradient(
+    90deg,
+    var(--primary-color) 0%,
+    var(--secondary-color) 100%
+  );
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-bottom: none;
 }
 
-.card {
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  border-radius: 8px;
+.navbar-brand {
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
-.card-body {
-  padding: 20px;
-}
-
-.alert {
-  font-size: 1rem;
-}
-
-button.btn-primary {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
+.navbar .nav-link {
   color: #fff;
 }
 
-button.btn-primary:hover {
-  background-color: var(--secondary-color);
-  border-color: var(--secondary-color);
+.navbar .nav-link:hover {
+  color: #f8f9fa;
+  text-decoration: underline;
 }
 
-* {
-  transition: background-color 0.3s, color 0.3s;
+/* Cards */
+/* Cards adopt the surface colour and inherit text colour so they work
+   correctly in both light and dark themes. Without specifying
+   colour here, Bootstrap defaults would render dark text on dark
+   backgrounds in dark mode. */
+.card {
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Forum-style list card emphasising the category */
+.forum-card {
+  border-left: 5px solid var(--secondary-color);
+}
+
+.forum-card .badge {
+  background-color: var(--secondary-color);
+  padding: 0.35em 0.6em;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+/* Vote buttons styling */
+.vote-buttons button {
+  color: var(--secondary-color);
+  font-weight: 500;
+  transition: color 0.2s;
+  border: none;
+}
+
+.vote-buttons button:hover {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: #fff;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: #fff;
+}
+
+.btn-outline-primary {
+  color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  font-weight: 500;
+  border-radius: 6px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  background-color: var(--secondary-color);
+  color: #fff;
+}
+
+/* Forms */
+.form-control,
+.form-select {
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  padding: 0.6rem 0.75rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 0.2rem rgba(24, 188, 156, 0.25);
+}
+
+/* Alerts */
+.alert {
+  border-radius: 6px;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+}
+
+.alert-warning {
+  background-color: rgba(241, 196, 15, 0.15);
+  color: var(--text-color);
+  border-color: rgba(241, 196, 15, 0.3);
+}
+
+/* Override Bootstrap contextual badge colours to match the custom palette */
+.badge.bg-success {
+  background-color: var(--secondary-color) !important;
+  color: #fff !important;
+}
+
+.badge.bg-secondary {
+  background-color: var(--primary-color) !important;
+  color: #fff !important;
+}
+
+/*
+ * Filter panel styles
+ * The sidebar on the feed page uses a card-like panel to present filters. It
+ * inherits the same surface and shadow styles as cards but with its own
+ * spacing and list-group behaviour.
+ */
+.filter-panel {
+  background-color: var(--surface-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.filter-panel .list-group-item {
+  border: none;
+  padding: 0.6rem 1rem;
+  font-weight: 500;
+  color: var(--text-color);
+  background-color: transparent;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.filter-panel .list-group-item a {
+  display: block;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.filter-panel .list-group-item.active,
+.filter-panel .list-group-item:hover {
+  background-color: var(--secondary-color);
+  color: #fff;
+}
+
+.filter-panel .list-group-item.active a,
+.filter-panel .list-group-item:hover a {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Badge inside filter panel (counts) */
+.filter-panel .badge {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+/*
+ * Post card styles
+ * Posts in the feed are displayed in a horizontal card layout with a left
+ * column showing the upvote count and a right column containing the content.
+ */
+.post-card {
+  display: flex;
+  background-color: var(--surface-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.post-card:hover {
+  /* Subtle lift and scale effect on hover to provide micro-interaction feedback */
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+}
+
+.post-card .votes {
+  flex: 0 0 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 1rem 0.5rem;
+}
+
+.post-card .votes span {
+  font-size: 1.5rem;
+  color: var(--secondary-color);
+  font-weight: 600;
+}
+
+.post-card .votes small {
+  font-size: 0.75rem;
+  color: var(--text-color);
+}
+
+.post-card .content {
+  flex: 1;
+  padding: 1rem 1.25rem;
+}
+
+.post-card .category-badge {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  color: #fff;
+}
+
+/* Colour variants for different categories */
+.post-card .category-badge.issue {
+  background-color: #e74c3c;
+}
+.post-card .category-badge.event {
+  background-color: var(--secondary-color);
+}
+.post-card .category-badge.recommendation {
+  background-color: #f1c40f;
+  color: #000;
+}
+.post-card .category-badge.general {
+  background-color: var(--primary-color);
+}
+
+.post-card .title {
+  /* Slightly larger heading for a more expressive look */
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--text-color);
+}
+
+/* Make card titles on detail pages more prominent */
+.card-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.post-card .meta {
+  font-size: 0.8rem;
+  color: var(--text-color);
+  opacity: 0.7;
+  margin-bottom: 0.5rem;
+}
+
+.post-card .excerpt {
+  font-size: 0.95rem;
+  color: var(--text-color);
+}
+
+.post-card .actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.post-card .actions .vote-buttons button {
+  color: var(--secondary-color);
+  font-size: 1.1rem;
+  border: none;
+  padding: 0;
+  margin-right: 0.5rem;
+  background: transparent;
+}
+
+.post-card .actions .vote-buttons button:hover {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+/* Theme toggle button */
+#theme-toggle {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  border-radius: 4px;
+  padding: 0.35rem 0.75rem;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+#theme-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-color: rgba(255, 255, 255, 0.7);
 }

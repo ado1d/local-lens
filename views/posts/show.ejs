@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= post.title %> - LocalLens</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <%- include('../partials/header') %>
+
+    <div class="container my-4">
+      <div class="card">
+        <div class="card-body">
+          <% /* Display the post category with an icon. */ %> <% let iconClass;
+          switch (post.category) { case 'issue': iconClass =
+          'bi-exclamation-triangle-fill'; break; case 'event': iconClass =
+          'bi-calendar-event'; break; case 'recommendation': iconClass =
+          'bi-lightbulb-fill'; break; case 'general': default: iconClass =
+          'bi-chat-dots-fill'; break; } %>
+          <span
+            class="badge bg-secondary text-uppercase mb-2 d-inline-flex align-items-center"
+          >
+            <i class="bi <%= iconClass %> me-1"></i> <%= post.category %>
+          </span>
+          <h2 class="card-title"><%= post.title %></h2>
+          <p class="text-muted">
+            By <%= post.email %> • <%= new
+            Date(post.created_at).toLocaleString() %>
+          </p>
+          <p class="card-text"><%= post.content %></p>
+          <div class="d-flex align-items-center mt-3">
+            <form
+              action="/posts/<%= post.id %>/upvote"
+              method="POST"
+              class="d-inline me-2"
+            >
+              <!-- Use icons for voting to match the feed page design -->
+              <button type="submit" class="btn btn-link p-0">
+                <i class="bi bi-hand-thumbs-up"></i> Upvote
+              </button>
+            </form>
+            <form
+              action="/posts/<%= post.id %>/downvote"
+              method="POST"
+              class="d-inline"
+            >
+              <button type="submit" class="btn btn-link p-0">
+                <i class="bi bi-hand-thumbs-down"></i> Downvote
+              </button>
+            </form>
+            <span class="badge bg-success ms-3"
+              >Score: <%= post.upvotes %></span
+            >
+          </div>
+        </div>
+      </div>
+      <a href="/" class="btn btn-secondary mt-3">← Back to Feed</a>
+    </div>
+
+    <%- include('../partials/footer') %>
+  </body>
+</html>

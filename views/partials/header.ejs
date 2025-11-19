@@ -1,32 +1,81 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar-dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">LocalLens</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
         <% if (currentUser) { %>
-          <li class="nav-item">
-            <span class="nav-link">Hi, <%= currentUser.email %></span>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/posts/new">New Post</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/logout">Logout</a>
-          </li>
-        <% } else { %>
-          <li class="nav-item">
-            <a class="nav-link" href="/login">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/register">Register</a>
-          </li>
-        <% } %>
-        <li class="nav-item">
-          <button id="theme-toggle" class="btn btn-outline-light btn-sm ms-2">Switch Mode</button>
+        <!-- Logged-in navigation: New Post, Search, Theme toggle, Logout (last) -->
+        <li class="nav-item me-3">
+          <!-- Use an icon alongside the text for the New Post link -->
+          <a class="nav-link d-flex align-items-center" href="/posts/new">
+            <i class="bi bi-plus-circle me-1"></i>
+            <span>New Post</span>
+          </a>
         </li>
+        <li class="nav-item me-3">
+          <form class="d-flex" action="/" method="get">
+            <!-- Preserve current category and sort parameters when performing a search -->
+            <% if (typeof selectedCategory !== 'undefined' && selectedCategory)
+            { %>
+            <input
+              type="hidden"
+              name="category"
+              value="<%= selectedCategory %>"
+            />
+            <% } %> <% if (typeof selectedSort !== 'undefined' && selectedSort)
+            { %>
+            <input type="hidden" name="sort" value="<%= selectedSort %>" />
+            <% } %>
+            <input
+              name="search"
+              value="<%= typeof searchTerm !== 'undefined' ? searchTerm : '' %>"
+              class="form-control form-control-sm me-2"
+              type="search"
+              placeholder="Search posts"
+              aria-label="Search"
+            />
+            <button class="btn btn-outline-light btn-sm" type="submit">
+              Search
+            </button>
+          </form>
+        </li>
+        <li class="nav-item me-3">
+          <button id="theme-toggle" class="btn btn-outline-light btn-sm">
+            Switch Mode
+          </button>
+        </li>
+        <li class="nav-item">
+          <!-- Include an icon for the logout action to improve aesthetics -->
+          <a class="nav-link d-flex align-items-center" href="/logout">
+            <i class="bi bi-box-arrow-right me-1"></i>
+            <span>Logout</span>
+          </a>
+        </li>
+        <% } else { %>
+        <!-- Guest navigation: Login, Register, Theme toggle -->
+        <li class="nav-item me-3">
+          <a class="nav-link" href="/login">Login</a>
+        </li>
+        <li class="nav-item me-3">
+          <a class="nav-link" href="/register">Register</a>
+        </li>
+        <li class="nav-item">
+          <button id="theme-toggle" class="btn btn-outline-light btn-sm">
+            Switch Mode
+          </button>
+        </li>
+        <% } %>
       </ul>
     </div>
   </div>
