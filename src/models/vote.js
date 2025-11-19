@@ -1,6 +1,5 @@
 const pool = require('../config/db');
 
-
 // vote model to handle upvote n downvote
 const Vote = {
   // register a vote, if user already voted update it       (voteType 1 for up -1 for for downvote)

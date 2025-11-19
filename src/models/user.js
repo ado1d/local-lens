@@ -16,14 +16,12 @@ const User = {
 
 
 
-
   async findByEmail(email) {
     const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
     return rows.length ? rows[0] : null;
   },
 
   
-
 
   async findById(id) {
     const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [id]);

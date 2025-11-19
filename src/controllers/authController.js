@@ -3,7 +3,6 @@ const Area = require('../models/area');
 const bcrypt = require('bcryptjs');
 
 
-
 exports.showRegister = async (req, res) => {
   try {
     const areas = await Area.getAll();
@@ -13,7 +12,6 @@ exports.showRegister = async (req, res) => {
     res.sendStatus(500);
   }
 };
-
 
 
 exports.register = async (req, res) => {
@@ -46,12 +44,10 @@ exports.register = async (req, res) => {
 
 
 
-
 // to render login page
 exports.showLogin = (req, res) => {
   res.render('auth/login', { errors: req.flash('error'), old: {} });
 };
-
 
 // to handle login Post
 exports.login = async (req, res) => {
@@ -83,7 +79,6 @@ exports.login = async (req, res) => {
     res.sendStatus(500);
   }
 };
-
 
 
 // to logout 
