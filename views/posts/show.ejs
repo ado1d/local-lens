@@ -30,7 +30,7 @@
             <i class="bi <%= iconClass %> me-1"></i> <%= post.category %>
           </span>
           <h2 class="card-title"><%= post.title %></h2>
-          <p class="text-muted">
+          <p class="text-secondary">
             By <%= post.email %> • <%= new
             Date(post.created_at).toLocaleString() %>
           </p>
@@ -41,7 +41,6 @@
               method="POST"
               class="d-inline me-2"
             >
-              <!-- Use icons for voting to match the feed page design -->
               <button type="submit" class="btn btn-link p-0">
                 <i class="bi bi-hand-thumbs-up"></i> Upvote
               </button>
