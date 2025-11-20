@@ -16,6 +16,18 @@
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
         <% if (currentUser) { %>
         <!-- Logged-in navigation: New Post, Search, Theme toggle, Logout (last) -->
+
+
+        <!-- activity log for user -->
+
+        <li class="nav-item me-3">
+          <!-- Use an icon alongside the text for the New Post link -->
+          <a class="nav-link d-flex align-items-center" href="/activity-log">
+            <i class="bi bi-plus-circle me-1"></i>
+            <span>Activity Log</span>
+          </a>
+        </li>
+
         <li class="nav-item me-3">
           <!-- Use an icon alongside the text for the New Post link -->
           <a class="nav-link d-flex align-items-center" href="/posts/new">

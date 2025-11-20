@@ -87,6 +87,14 @@ const Post = {
     await pool.query('DELETE FROM votes WHERE post_id = ?', [id]);
     // remove the post itself
     await pool.query('DELETE FROM posts WHERE id = ?', [id]);
+  },
+
+  async getByUserAndArea(userId, areaId) {
+    const [rows] = await pool.query(
+      `SELECT * FROM posts WHERE user_id = ? AND area_id = ? ORDER BY created_at DESC`,
+      [userId, areaId]
+    );
+    return rows;
   }
 };
 

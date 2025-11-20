@@ -24,5 +24,8 @@ router.post('/posts/:id/upvote', postController.upvote);
 // downvote a post
 router.post('/posts/:id/downvote', postController.downvote);
 
+
+router.get('/activity-log', postController.activityLog);
+
 module.exports = router;
 

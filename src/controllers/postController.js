@@ -172,3 +172,20 @@ exports.downvote = async (req, res) => {
   }
 };
 
+exports.activityLog = async (req, res) => {
+  const userId = req.session.userId;
+  const areaId = req.session.areaId;
+  if (!userId) {
+    return res.redirect('/login');
+  }
+  if (!areaId) {
+    return res.redirect('/login');
+  }
+  try {
+    const posts = await Post.getByUserAndArea(userId, areaId);
+    res.render('posts/activity-log', { posts });
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+};
