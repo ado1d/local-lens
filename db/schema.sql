@@ -44,6 +44,15 @@ CREATE TABLE comments (
 );
 
 
+CREATE TABLE activity_log (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  activity_type ENUM('post_created','post_deleted','comment_added','comment_deleted','post_upvoted','post_downvoted', 'login') NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+
 
 INSERT INTO areas (name, zip_code) VALUES
 ('Akhalia', '3114'),

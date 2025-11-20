@@ -3,6 +3,8 @@ const Area = require('../models/area');
 const Vote = require('../models/vote');
 const Comment = require('../models/comment');
 
+const ActivityLog = require('../models/activity-log');
+
 
 // to show main feed by user area and optional category
 
@@ -59,6 +61,8 @@ exports.createPost = async (req, res) => {
   }
   try {
     await Post.create(userId, areaId, category, title, content);
+
+    await ActivityLog.logActivity(userId, 'post_created');
     res.redirect('/');
   } catch (err) {
     console.error(err);
@@ -107,6 +111,7 @@ exports.addComment = async (req, res) => {
   }
   try {
     await Comment.create(postId, userEmail, content);
+    await ActivityLog.logActivity(userId, 'comment_added');
     res.redirect(`/posts/${postId}`);
   } catch (err) {
     console.error(err);
@@ -130,6 +135,7 @@ exports.deletePost = async (req, res) => {
       return res.status(403).send('You are not authorized to delete this post.');
     }
     await Post.delete(postId);
+    await ActivityLog.logActivity(userId, 'post_deleted');
     res.redirect('/');
   } catch (err) {
     console.error(err);
@@ -148,6 +154,7 @@ exports.upvote = async (req, res) => {
     await Vote.vote(userId, postId, 1);
     // redirect back to the referring page (feed or detail)
     const redirectUrl = req.get('Referer') || '/';
+    await ActivityLog.logActivity(userId, 'post_upvoted');
     res.redirect(redirectUrl);
   } catch (err) {
     console.error(err);
@@ -165,6 +172,8 @@ exports.downvote = async (req, res) => {
   try {
     await Vote.vote(userId, postId, -1);
     const redirectUrl = req.get('Referer') || '/';
+
+    await ActivityLog.logActivity(userId, 'post_downvoted');
     res.redirect(redirectUrl);
   } catch (err) {
     console.error(err);
@@ -174,18 +183,20 @@ exports.downvote = async (req, res) => {
 
 exports.activityLog = async (req, res) => {
   const userId = req.session.userId;
-  const areaId = req.session.areaId;
   if (!userId) {
     return res.redirect('/login');
-  }
-  if (!areaId) {
-    return res.redirect('/login');
-  }
+  } 
+  const areaId = req.session.areaId;
+
   try {
     const posts = await Post.getByUserAndArea(userId, areaId);
+
+    // await ActivityLog.logActivity(userId, 'login');
+
     res.render('posts/activity-log', { posts });
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
   }
+
 };
