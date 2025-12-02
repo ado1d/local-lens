@@ -1,5 +1,8 @@
 const express = require('express');
 const session = require('express-session');
+
+const cookieSession = require('cookie-session');
+
 const bodyParser = require('body-parser');
 const flash = require('connect-flash');
 const path = require('path');
@@ -16,6 +19,15 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.use(bodyParser.urlencoded({ extended: false }));
+
+
+
+app.use(cookieSession({
+  name: 'session',
+  keys: [process.env.SESSION_SECRET],
+  maxAge: 24 * 60 * 60 * 1000 // for1 day
+}));
+
 
 app.use(
   session({
