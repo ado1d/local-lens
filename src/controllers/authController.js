@@ -92,10 +92,12 @@ exports.login = async (req, res) => {
 };
 
 
-// to logout 
+
+// when logging out assigning session to null
 exports.logout = (req, res) => {
-  req.session.destroy(() => {
-    res.redirect('/login');
-  });
+  if (req.session) {
+    req.session = null;
+  }
+  res.redirect('/login');
 };
 
