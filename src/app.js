@@ -47,8 +47,8 @@ app.use((err, req, res, next) => {
   res.status(500).send('Internal Server Error');
 });
 
-// startin server
-const port = process.env.PORT || 6969;
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
+module.exports = app;
+if (!process.env.VERCEL) {
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => console.log(`Server running on ${port}`));
+}
