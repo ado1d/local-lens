@@ -10,6 +10,7 @@ const Post = {
     );
   },
 
+  
   async getByArea(areaId, category = null, searchTerm = null, sort = 'newest') {
     
     let sql = `SELECT posts.*, users.email FROM posts JOIN users ON posts.user_id = users.id WHERE posts.area_id = ?`;
@@ -46,13 +47,33 @@ const Post = {
     return rows;
   },
 
+  
   async getById(id) {
     const [rows] = await pool.query(
       `SELECT posts.*, users.email FROM posts JOIN users ON posts.user_id = users.id WHERE posts.id = ?`,
       [id]
     );
     return rows.length ? rows[0] : null;
+  },
+
+  
+  async delete(id) {
+    // remove comments associated with the post
+    await pool.query('DELETE FROM comments WHERE post_id = ?', [id]);
+    // remove votes associated with the post
+    await pool.query('DELETE FROM votes WHERE post_id = ?', [id]);
+    // remove the post itself
+    await pool.query('DELETE FROM posts WHERE id = ?', [id]);
+  },
+
+  async getByUserAndArea(userId, areaId) {
+    const [rows] = await pool.query(
+      `SELECT * FROM posts WHERE user_id = ? AND area_id = ? ORDER BY created_at DESC`,
+      [userId, areaId]
+    );
+    return rows;
   }
 };
 
 module.exports = Post;
+

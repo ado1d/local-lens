@@ -30,7 +30,7 @@
             <i class="bi <%= iconClass %> me-1"></i> <%= post.category %>
           </span>
           <h2 class="card-title"><%= post.title %></h2>
-          <p class="text-secondary">
+          <p class="text-muted">
             By <%= post.email %> • <%= new
             Date(post.created_at).toLocaleString() %>
           </p>
@@ -41,6 +41,7 @@
               method="POST"
               class="d-inline me-2"
             >
+              <!-- Use icons for voting to match the feed page design -->
               <button type="submit" class="btn btn-link p-0">
                 <i class="bi bi-hand-thumbs-up"></i> Upvote
               </button>
@@ -60,6 +61,54 @@
           </div>
         </div>
       </div>
+      <!-- Comments section -->
+      <div class="mt-4">
+        <h4>Comments</h4>
+        <% if (typeof errors !== 'undefined' && errors.length) { %>
+        <div class="alert alert-danger">
+          <ul class="mb-0">
+            <% errors.forEach(function(err) { %>
+            <li><%= err %></li>
+            <% }); %>
+          </ul>
+        </div>
+        <% } %> <% if (comments && comments.length) { %> <%
+        comments.forEach(function(comment) { %>
+        <div class="mb-3 p-3 border rounded">
+          <strong><%= comment.name %></strong>
+          <small class="text-muted"
+            >• <%= new Date(comment.created_at).toLocaleString() %></small
+          >
+          <p class="mb-0"><%= comment.content %></p>
+        </div>
+        <% }); %> <% } else { %>
+        <p>No comments yet. Be the first to comment!</p>
+        <% } %>
+        <form
+          action="/posts/<%= post.id %>/comments"
+          method="POST"
+          class="mt-3"
+        >
+          <div class="mb-3">
+            <label for="content" class="form-label">Comment</label>
+            <textarea
+              id="content"
+              name="content"
+              class="form-control"
+              rows="3"
+              required
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit Comment</button>
+        </form>
+      </div>
+
+      <% if (post.user_id == currentUserId) { %>
+      <form action="/posts/<%= post.id %>/delete" method="POST">
+        <button type="submit" class="btn btn-danger mt-2">Delete Post</button>
+      </form>
+      <% } %>
+
       <a href="/" class="btn btn-secondary mt-3">← Back to Feed</a>
     </div>
 

@@ -2,6 +2,9 @@ const User = require('../models/user');
 const Area = require('../models/area');
 const bcrypt = require('bcryptjs');
 
+const ActivityLog = require('../models/activity-log');
+
+
 
 exports.showRegister = async (req, res) => {
   try {
@@ -35,6 +38,10 @@ exports.register = async (req, res) => {
     const user = await User.create(email, password, area_id);
     req.session.userId = user.id;
     req.session.areaId = user.area_id;
+    // store the user email in session so it can be used to identify commenters
+    req.session.email = user.email;
+
+    // await ActivityLog.logActivity(user.id, 'login');
     res.redirect('/');
   } catch (err) {
     console.error(err);
@@ -73,6 +80,10 @@ exports.login = async (req, res) => {
     // store session
     req.session.userId = user.id;
     req.session.areaId = user.area_id;
+    // also store email to identify user when commenting
+    req.session.email = user.email;
+
+    await ActivityLog.logActivity(user.id, 'login');  
     res.redirect('/');
   } catch (err) {
     console.error(err);
@@ -87,3 +98,4 @@ exports.logout = (req, res) => {
     res.redirect('/login');
   });
 };
+
